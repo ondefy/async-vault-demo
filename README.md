@@ -1,6 +1,10 @@
-# Async Vault Integration Guide
+# Async Vault Demo
 
-Integration guide for an async vault with USDC as the underlying token.
+A demo app for integrating with Zyfai's async vault. Use this repo as a reference implementation for deposit and withdrawal flows.
+
+## Integration Guide
+
+Guide for an async vault with USDC as the underlying token.
 
 ## Prerequisites
 
