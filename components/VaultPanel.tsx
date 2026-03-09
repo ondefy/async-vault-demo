@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { isAddress, formatUnits, erc20Abi } from 'viem'
 import { VAULT_ABI } from '@/lib/vaultAbi'
-import { useDashboardStore } from '@/lib/store'
+import { useVaultStore } from '@/lib/store'
 
 type AbiFunction = (typeof VAULT_ABI)[number]
 type AbiFunctionItem = Extract<AbiFunction, { type: 'function' }>
@@ -21,21 +21,16 @@ const writeFunctions = VAULT_ABI.filter(
 
 export function VaultPanel() {
   const { address, isConnected } = useAccount()
-  const { impersonatedAddress, setImpersonatedAddress, setIsImpersonating } = useDashboardStore()
+  const { vaultAddress: storedVaultAddress, setVaultAddress } = useVaultStore()
   const [selectedFunction, setSelectedFunction] = useState<AbiFunctionItem | null>(null)
   const [args, setArgs] = useState<Record<string, string>>({})
   const [activeTab, setActiveTab] = useState<'read' | 'write'>('read')
 
-  // Use impersonated address as vault address
-  const vaultAddress = impersonatedAddress || ''
+  const vaultAddress = storedVaultAddress || ''
   const isValidAddress = isAddress(vaultAddress)
 
-  // Handle vault address change - auto-enable impersonation for valid addresses
   const handleVaultAddressChange = (value: string) => {
-    setImpersonatedAddress(value || null)
-    if (isAddress(value)) {
-      setIsImpersonating(true)
-    }
+    setVaultAddress(value || null)
   }
 
   const quickReadActions = ['balanceOf', 'maxRequestRedeem', 'pendingWithdrawals', 'isClaimable', 'isClaimed', 'getWithdrawKey']

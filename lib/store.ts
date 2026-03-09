@@ -1,12 +1,8 @@
 import { create } from 'zustand'
 
 interface VaultState {
-  // Vault address (persisted to localStorage)
-  impersonatedAddress: string | null
-  isImpersonating: boolean
-
-  setImpersonatedAddress: (address: string | null) => void
-  setIsImpersonating: (enabled: boolean) => void
+  vaultAddress: string | null
+  setVaultAddress: (address: string | null) => void
 }
 
 const DEFAULT_VAULT_ADDRESS = '0x29d6fbe61ea5b41697a285e8ef5de6f2f9e6bd94'
@@ -17,12 +13,11 @@ const loadVaultAddress = () => {
   return stored || DEFAULT_VAULT_ADDRESS
 }
 
-export const useDashboardStore = create<VaultState>((set) => ({
-  impersonatedAddress: loadVaultAddress(),
-  isImpersonating: true,
+export const useVaultStore = create<VaultState>((set) => ({
+  vaultAddress: loadVaultAddress(),
 
-  setImpersonatedAddress: (address) => {
-    set({ impersonatedAddress: address })
+  setVaultAddress: (address) => {
+    set({ vaultAddress: address })
     if (typeof window !== 'undefined') {
       if (address) {
         localStorage.setItem('vaultAddress', address)
@@ -31,6 +26,4 @@ export const useDashboardStore = create<VaultState>((set) => ({
       }
     }
   },
-
-  setIsImpersonating: (enabled) => set({ isImpersonating: enabled }),
 }))
